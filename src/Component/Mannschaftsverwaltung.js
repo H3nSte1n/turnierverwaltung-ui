@@ -5,11 +5,11 @@ import React from "react";
  */
 
 class Mannschaftsverwaltung extends React.Component {
-    render() {
-        return (
-            <div>test</div>
-        );
-    }
+	render() {
+		return (
+			<div>test</div>
+		);
+	}
 }
 
 export default Mannschaftsverwaltung;
