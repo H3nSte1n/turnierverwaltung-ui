@@ -1,26 +1,39 @@
 import React, { useState } from "react";
+import Auth from "../Components/Auth";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Auth from "../Component/Auth";
+import { useHistory } from "react-router-dom";
+import LoaderButton from "../Components/LoaderButton";
+import { useAppContext } from "../libs/contextLib";
+import { useFormFields } from "../libs/hooksLib";
+import { onError } from "../libs/errorLib";
 import "./Login.css";
 
 export default function Login() {
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const history = useHistory();
+	const { userHasAuthenticated } = useAppContext();
+	const [isLoading, setIsLoading] = useState(false);
+	const [fields, handleFieldChange] = useFormFields({
+		name: "",
+		email: "",
+		password: "",
+	});
 
 	function validateForm() {
-		return name.length > 0 && password.length > 0 && email.length > 0;
+		return fields.name.length > 0 && fields.email.length > 0 && fields.password.length > 0;
 	}
 
 	async function handleSubmit(event) {
 		event.preventDefault();
 
+		setIsLoading(true);
+
 		try {
-			await Auth.signIn(name, email, password);
-			alert("Logged in");
+			await Auth.signIn(fields.name, fields.email, fields.password);
+			userHasAuthenticated(true);
+			history.push("/");
 		} catch (e) {
-			alert(e.message);
+			onError(e);
+			setIsLoading(false);
 		}
 	}
 
@@ -29,28 +42,19 @@ export default function Login() {
 			<Form onSubmit={handleSubmit}>
 				<Form.Group size="lg" controlId="name">
 					<Form.Label>Name</Form.Label>
-					<Form.Control
-						autoFocus type="text" value={name} autoComplete="username"
-						onChange={(e) => setName(e.target.value)}
-					/>
+					<Form.Control autoFocus type="name" value={fields.name} onChange={handleFieldChange}/>
 				</Form.Group>
 				<Form.Group size="lg" controlId="email">
 					<Form.Label>Email</Form.Label>
-					<Form.Control
-						type="email" value={email} autoComplete="email"
-						onChange={(e) => setEmail(e.target.value)}
-					/>
+					<Form.Control autoFocus type="email" value={fields.email} onChange={handleFieldChange}/>
 				</Form.Group>
 				<Form.Group size="lg" controlId="password">
 					<Form.Label>Password</Form.Label>
-					<Form.Control
-						type="password" value={password} autoComplete="current-password"
-						onChange={(e) => setPassword(e.target.value)}
-					/>
+					<Form.Control type="password" value={fields.password} onChange={handleFieldChange}/>
 				</Form.Group>
-				<Button block size="lg" type="submit" disabled={!validateForm()}>
+				<LoaderButton block size="lg" type="submit" isLoading={isLoading} disabled={!validateForm()}>
 					Login
-				</Button>
+				</LoaderButton>
 			</Form>
 		</div>
 	);
