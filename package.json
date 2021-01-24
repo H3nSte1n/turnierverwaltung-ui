@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "",
   "dependencies": {
-    "@testing-library/jest-dom": "5.11.6",
+    "@testing-library/jest-dom": "5.11.9",
     "@testing-library/react": "11.2.2",
     "@testing-library/user-event": "12.5.0",
     "npm": "6.14.9",
