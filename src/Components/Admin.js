@@ -1,15 +1,15 @@
 import React from "react";
 
 /** TODO:
- * - Stuffs
+ * - Implement User-Control
  */
 
 class Admin extends React.Component {
-    render() {
-        return (
-            <div>test</div>
-        );
-    }
+	render() {
+		return (
+			<div>test</div>
+		);
+	}
 }
 
 export default Admin;
