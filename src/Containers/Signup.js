@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Auth from "../Components/Auth";
 import { useHistory } from "react-router-dom";
-import LoaderButton from "../components/LoaderButton";
+import LoaderButton from "../Components/LoaderButton";
 import { useAppContext } from "../libs/contextLib";
 import { useFormFields } from "../libs/hooksLib";
 import { onError } from "../libs/errorLib";
@@ -10,10 +10,9 @@ import "./Signup.css";
 
 export default function Signup() {
 	const [fields, handleFieldChange] = useFormFields({
-		email: "",
+		user: "",
 		password: "",
 		confirmPassword: "",
-		confirmationCode: "",
 	});
 	const history = useHistory();
 	const [newUser, setNewUser] = useState(null);
@@ -22,14 +21,10 @@ export default function Signup() {
 
 	function validateForm() {
 		return (
-			fields.email.length > 0 &&
+			fields.user.length > 0 &&
 			fields.password.length > 0 &&
 			fields.password === fields.confirmPassword
 		);
-	}
-
-	function validateConfirmationForm() {
-		return fields.confirmationCode.length > 0;
 	}
 
 	async function handleSubmit(event) {
@@ -39,27 +34,15 @@ export default function Signup() {
 
 		try {
 			const newUser = await Auth.signUp({
-				username: fields.email,
+				username: fields.user,
 				password: fields.password,
 			});
-			setIsLoading(false);
 			setNewUser(newUser);
-		} catch (e) {
-			onError(e);
-			setIsLoading(false);
-		}
-	}
 
-	async function handleConfirmationSubmit(event) {
-		event.preventDefault();
-
-		setIsLoading(true);
-
-		try {
-			await Auth.confirmSignUp(fields.email, fields.confirmationCode);
-			await Auth.signIn(fields.email, fields.password);
-
+			await Auth.signIn(fields.user, fields.password);
 			userHasAuthenticated(true);
+			setIsLoading(false);
+
 			history.push("/");
 		} catch (e) {
 			onError(e);
@@ -67,27 +50,12 @@ export default function Signup() {
 		}
 	}
 
-	function renderConfirmationForm() {
-		return (
-			<Form onSubmit={handleConfirmationSubmit}>
-				<Form.Group controlId="confirmationCode" size="lg">
-					<Form.Label>Confirmation Code</Form.Label>
-					<Form.Control autoFocus type="tel" onChange={handleFieldChange} value={fields.confirmationCode}/>
-					<Form.Text muted>Please check your email for the code.</Form.Text>
-				</Form.Group>
-				<LoaderButton block size="lg" type="submit" variant="success" isLoading={isLoading} disabled={!validateConfirmationForm()}>
-					Verify
-				</LoaderButton>
-			</Form>
-		);
-	}
-
 	function renderForm() {
 		return (
 			<Form onSubmit={handleSubmit}>
-				<Form.Group controlId="email" size="lg">
-					<Form.Label>Email</Form.Label>
-					<Form.Control autoFocus type="email" value={fields.email} onChange={handleFieldChange}/>
+				<Form.Group controlId="user" size="lg">
+					<Form.Label>User</Form.Label>
+					<Form.Control autoFocus type="user" value={fields.user} onChange={handleFieldChange}/>
 				</Form.Group>
 				<Form.Group controlId="password" size="lg">
 					<Form.Label>Password</Form.Label>
@@ -106,7 +74,7 @@ export default function Signup() {
 
 	return (
 		<div className="Signup">
-			{newUser === null ? renderForm() : renderConfirmationForm()}
+			{newUser === null ? renderForm() : history.push("/")}
 		</div>
 	);
 }

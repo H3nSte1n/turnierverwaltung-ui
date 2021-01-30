@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 import Routes from "./Routes";
 import { AppContext } from "./libs/contextLib";
 import Auth from "./Components/Auth";
-import { onError } from "./libs/errorLib";
+//import { onError } from "./libs/errorLib";
 import './App.css';
 
 //import Admin from './Components/Admin';
@@ -29,11 +29,7 @@ function App() {
 			await Auth.currentSession();
 			userHasAuthenticated(true);
 		}
-		catch(e) {
-			if (e !== 'No current user') {
-				onError(e);
-			}
-		}
+		catch(e) { }
 
 		setIsAuthenticating(false);
 	}
@@ -41,9 +37,9 @@ function App() {
 	async function handleLogout() {
 		await Auth.signOut();
 
-		history.push("/login");
-
 		userHasAuthenticated(false);
+
+		history.push("/login");
 	}
 
 	return (

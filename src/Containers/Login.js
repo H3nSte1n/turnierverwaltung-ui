@@ -12,14 +12,13 @@ export default function Login() {
 	const history = useHistory();
 	const { userHasAuthenticated } = useAppContext();
 	const [isLoading, setIsLoading] = useState(false);
-	const [fields, handleFieldChange] = useFormFields({
+	const [fields, handleFieldChange] = useFormFields({ // TODO: Enable E-Mail again
 		name: "",
-		email: "",
 		password: "",
 	});
 
 	function validateForm() {
-		return fields.name.length > 0 && fields.email.length > 0 && fields.password.length > 0;
+		return fields.name.length > 0 && fields.password.length > 0;
 	}
 
 	async function handleSubmit(event) {
@@ -28,7 +27,7 @@ export default function Login() {
 		setIsLoading(true);
 
 		try {
-			await Auth.signIn(fields.name, fields.email, fields.password);
+			await Auth.signIn(fields.name, fields.password);
 			userHasAuthenticated(true);
 			history.push("/");
 		} catch (e) {
@@ -43,10 +42,6 @@ export default function Login() {
 				<Form.Group size="lg" controlId="name">
 					<Form.Label>Name</Form.Label>
 					<Form.Control autoFocus type="name" value={fields.name} onChange={handleFieldChange}/>
-				</Form.Group>
-				<Form.Group size="lg" controlId="email">
-					<Form.Label>Email</Form.Label>
-					<Form.Control autoFocus type="email" value={fields.email} onChange={handleFieldChange}/>
 				</Form.Group>
 				<Form.Group size="lg" controlId="password">
 					<Form.Label>Password</Form.Label>
