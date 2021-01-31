@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Auth from "../Components/Auth";
 import Form from "react-bootstrap/Form";
-import { useHistory } from "react-router-dom";
 import LoaderButton from "../Components/LoaderButton";
 import { useAppContext } from "../libs/contextLib";
 import { useFormFields } from "../libs/hooksLib";
@@ -9,10 +8,9 @@ import { onError } from "../libs/errorLib";
 import "./Login.css";
 
 export default function Login() {
-	const history = useHistory();
 	const { userHasAuthenticated } = useAppContext();
 	const [isLoading, setIsLoading] = useState(false);
-	const [fields, handleFieldChange] = useFormFields({ // TODO: Enable E-Mail again
+	const [fields, handleFieldChange] = useFormFields({
 		name: "",
 		password: "",
 	});
@@ -29,7 +27,6 @@ export default function Login() {
 		try {
 			await Auth.signIn(fields.name, fields.password);
 			userHasAuthenticated(true);
-			history.push("/");
 		} catch (e) {
 			onError(e);
 			setIsLoading(false);
