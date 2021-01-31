@@ -9,11 +9,6 @@ import Auth from "./Components/Auth";
 //import { onError } from "./libs/errorLib";
 import './App.css';
 
-//import Admin from './Components/Admin';
-//import Mannschaftsverwaltung from './Components/Mannschaftsverwaltung';
-//import Personenverwaltung from './Components/Personenverwaltung';
-//import Turnierverwaltung from './Components/Turnierverwaltung';
-
 function App() {
 	const [isAuthenticating, setIsAuthenticating] = useState(true);
 	const [isAuthenticated, userHasAuthenticated] = useState(false);
@@ -55,7 +50,18 @@ function App() {
 					<Navbar.Collapse className="justify-content-end">
 						<Nav activeKey={window.location.pathname}>
 							{isAuthenticated ? (
-								<Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+								<>
+									<LinkContainer to="/personen">
+										<Nav.Link>Personenverwaltung</Nav.Link>
+									</LinkContainer>
+									<LinkContainer to="/mannschaften">
+										<Nav.Link>Mannschaftsverwaltung</Nav.Link>
+									</LinkContainer>
+									<LinkContainer to="/turniere">
+										<Nav.Link>Turnierverwaltung</Nav.Link>
+									</LinkContainer>
+									<Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+								</>
 							) : (
 								<>
 									<LinkContainer to="/signup">

@@ -70,7 +70,7 @@ export default class Auth {
 					return this.rejectAuthError(this.AuthErrorTypes.SignInError);
 				}
 			}).catch((error) => {
-				return this.rejectAuthError(this.AuthErrorTypes.SignInError);
+				reject(error)
 			});
 		});
 
@@ -123,7 +123,7 @@ export default class Auth {
 					return this.rejectAuthError(this.AuthErrorTypes.SignUpError);
 				}
 			}).catch((error) => {
-				return this.rejectAuthError(this.AuthErrorTypes.SignUpError);
+				reject(error)
 			});
 		});
 	}
@@ -144,8 +144,6 @@ export default class Auth {
 	 * @returns {Promise<void>}
 	 */
 	static async currentSession() {
-		console.log("User: " + localStorage.getItem('username'));
-		console.log("Session: " + localStorage.getItem('session'));
 		return new Promise((resolve, reject) => {
 			if (!localStorage.getItem('username') || !localStorage.getItem('session')) {
 				return reject();
