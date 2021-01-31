@@ -11,7 +11,7 @@ export default class Auth {
 	}
 
 	/**
-	 * https://turnierverwaltung-auth.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml
+	 * @doc https://turnierverwaltung-auth.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml
 	 * @type {string}
 	 */
 	static authAPIUrl = "https://cors-anywhere.herokuapp.com/https://turnierverwaltung-auth.herokuapp.com/api/v1/";
@@ -51,7 +51,7 @@ export default class Auth {
 			throw new Error('Pending sign-in attempt already in progress');
 		}
 
-		this.pendingSignIn = new Promise((resolve, reject) => { // TODO: Handle other Status Codes
+		this.pendingSignIn = new Promise((resolve, reject) => {
 			fetch(this.authAPIUrl + "sign-in", {
 				method: 'POST',
 				headers: {
@@ -70,7 +70,7 @@ export default class Auth {
 					return this.rejectAuthError(this.AuthErrorTypes.SignInError);
 				}
 			}).catch((error) => {
-				reject(error);
+				return this.rejectAuthError(this.AuthErrorTypes.SignInError);
 			});
 		});
 
@@ -85,10 +85,12 @@ export default class Auth {
 	static async signUp(data) {
 		let username = null;
 		let password = null;
+		let email = null;
 
 		if (data && typeof data === 'object') {
 			username = data['username'];
 			password = data['password'];
+			email = data['email'];
 		} else {
 			return this.rejectAuthError(this.AuthErrorTypes.SignUpError);
 		}
@@ -100,7 +102,7 @@ export default class Auth {
 			return this.rejectAuthError(this.AuthErrorTypes.EmptyPassword);
 		}
 
-		return new Promise((resolve, reject) => { // TODO: Handle other Status Codes
+		return new Promise((resolve, reject) => {
 			fetch(this.authAPIUrl + "sign-up", {
 				method: 'POST',
 				headers: {
@@ -109,13 +111,19 @@ export default class Auth {
 				body: JSON.stringify({
 					"name": username,
 					"password": password,
-					"email": "ah@papoo.de", // TODO: Still needs to be added
-					"role": "admin", // admin|user
+					"email": email,
+					"role": "user", // admin|user
 				}),
 			}).then(data => {
 				resolve(data);
+				if(data.status === 200) {
+					resolve(data);
+				}
+				else {
+					return this.rejectAuthError(this.AuthErrorTypes.SignUpError);
+				}
 			}).catch((error) => {
-				reject(error);
+				return this.rejectAuthError(this.AuthErrorTypes.SignUpError);
 			});
 		});
 	}

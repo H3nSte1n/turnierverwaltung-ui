@@ -12,6 +12,7 @@ export default function Signup() {
 	const [fields, handleFieldChange] = useFormFields({
 		user: "",
 		password: "",
+		email: "",
 		confirmPassword: "",
 	});
 	const history = useHistory();
@@ -23,6 +24,7 @@ export default function Signup() {
 		return (
 			fields.user.length > 0 &&
 			fields.password.length > 0 &&
+			fields.email.length > 0 &&
 			fields.password === fields.confirmPassword
 		);
 	}
@@ -36,6 +38,7 @@ export default function Signup() {
 			const newUser = await Auth.signUp({
 				username: fields.user,
 				password: fields.password,
+				email: fields.email,
 			});
 			setNewUser(newUser);
 
@@ -56,6 +59,10 @@ export default function Signup() {
 				<Form.Group controlId="user" size="lg">
 					<Form.Label>User</Form.Label>
 					<Form.Control autoFocus type="user" value={fields.user} onChange={handleFieldChange}/>
+				</Form.Group>
+				<Form.Group controlId="email" size="lg">
+					<Form.Label>E-Mail-Address</Form.Label>
+					<Form.Control type="email" value={fields.email} onChange={handleFieldChange}/>
 				</Form.Group>
 				<Form.Group controlId="password" size="lg">
 					<Form.Label>Password</Form.Label>
