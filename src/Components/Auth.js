@@ -14,7 +14,7 @@ export default class Auth {
 	 * @doc https://turnierverwaltung-auth.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml
 	 * @type {string}
 	 */
-	static authAPIUrl = "https://cors-anywhere.herokuapp.com/https://turnierverwaltung-auth.herokuapp.com/api/v1/";
+	static authAPIUrl = "https://turnierverwaltung-auth.herokuapp.com/api/v1/";
 
 	/**
 	 *
