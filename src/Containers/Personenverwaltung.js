@@ -18,6 +18,7 @@ export default function Personenverwaltung() {
 	const { isAuthenticated } = useAppContext();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isEditing, setIEditing] = useState(false);
+	const [isAdding, setAdding] = useState(false);
 	const [fields, handleFieldChange] = useFormFields({
 		vorname: "",
 		name: "",
@@ -47,7 +48,7 @@ export default function Personenverwaltung() {
 		}
 
 		onLoad();
-	}, [isAuthenticated, isEditing]);
+	}, [isAuthenticated, isEditing, isAdding]);
 
 	async function loadPersons() {
 		return new Promise((resolve, reject) => {
@@ -280,11 +281,18 @@ export default function Personenverwaltung() {
 		}
 
 		try {
+			setAdding(true);
 			let initialDate = new Date(e.target.geb.value);
 			let formatedDate = Date.UTC(initialDate.getUTCFullYear(), initialDate.getUTCMonth(), initialDate.getUTCDate(),
 				initialDate.getUTCHours(), initialDate.getUTCMinutes(), initialDate.getUTCSeconds());
 
 			await addPerson(formatedDate);
+
+			fields.vorname = "";
+			fields.name = "";
+			fields.geb = "";
+
+			setAdding(false);
 		} catch (e) {
 			onError(e);
 		}
