@@ -209,11 +209,23 @@ export default function Personenverwaltung() {
 				initialDate.getUTCHours(), initialDate.getUTCMinutes(), initialDate.getUTCSeconds());
 
 			await editPerson(formatedDate);
+
 		} catch (e) {
 			onError(e);
 		}
 
+		fields.editingID = "";
+		fields.editingVorname = "";
+		fields.editingName = "";
+
 		setIsLoading(false);
+		setIEditing(false);
+	}
+
+	function goBack() {
+		fields.editingID = "";
+		fields.editingVorname = "";
+		fields.editingName = "";
 		setIEditing(false);
 	}
 
@@ -380,7 +392,12 @@ export default function Personenverwaltung() {
 									<Form.Control type="date" value={fields.editingGeb} onChange={handleFieldChange}/>
 								</Form.Group>
 							</td>
-							<td colSpan="2">
+							<td>
+								<LoaderButton block variant="warning" isLoading={isLoading} onClick={goBack}>
+									Zurück
+								</LoaderButton>
+							</td>
+							<td>
 								<LoaderButton block type="submit" variant="success" isLoading={isLoading} disabled={!validateEditForm()}>
 									Speichern
 								</LoaderButton>
