@@ -60,8 +60,9 @@ export default class Auth {
 				body: JSON.stringify(authDetails),
 			}).then(data => {
 				if(data.status === 200) {
-					data.text().then(function(data) {
-						localStorage.setItem('session', data)
+					data.json().then(function(data) {
+						localStorage.setItem('session', data.token);
+						localStorage.setItem('role', data.role);
 					});
 					localStorage.setItem('username', authDetails.name)
 					resolve(data);
@@ -136,6 +137,7 @@ export default class Auth {
 		try {
 			localStorage.removeItem('username');
 			localStorage.removeItem('session');
+			localStorage.removeItem('role');
 		} catch (e) { }
 	}
 
@@ -145,7 +147,7 @@ export default class Auth {
 	 */
 	static async currentSession() {
 		return new Promise((resolve, reject) => {
-			if (!localStorage.getItem('username') || !localStorage.getItem('session')) {
+			if (!localStorage.getItem('username') || !localStorage.getItem('session') || !localStorage.getItem('role')) {
 				return reject();
 			} else {
 				return resolve();

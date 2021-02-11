@@ -104,10 +104,10 @@ export default function Personenverwaltung() {
 						<td>{lastname}</td>
 						<td>{date}</td>
 						<td>
-							<Button variant="warning" block onClick={(e) => handleEdit(id, e)}>Bearbeiten</Button>
+							<Button variant="warning" block onClick={(e) => handleEdit(id, e)} disabled={localStorage.getItem('role') !== 'admin'}>Bearbeiten</Button>
 						</td>
 						<td>
-							<Button variant="danger" block onClick={(e) => handleDelete(id, e)}>Löschen</Button>
+							<Button variant="danger" block onClick={(e) => handleDelete(id, e)} disabled={localStorage.getItem('role') !== 'admin'}>Löschen</Button>
 						</td>
 					</tr>
 				))}
@@ -313,6 +313,7 @@ export default function Personenverwaltung() {
 	}
 
 	function renderAddForm() {
+		if(localStorage.getItem('role') !== 'admin') {return null}
 		return(
 			<Form onSubmit={handleAdd}>
 				<Table hover>
@@ -356,6 +357,7 @@ export default function Personenverwaltung() {
 	}
 
 	function renderEditingForm() {
+		if(localStorage.getItem('role') !== 'admin') {return null}
 		return (
 			<div className="lander">
 				<h1>Personenverwaltung</h1>
