@@ -5,7 +5,6 @@
  */
 
 // First-Party
-import "./Home.css";
 import Home from "./Containers/Home";
 import NotFound from "./Containers/NotFound";
 import Login from "./Containers/Login";
