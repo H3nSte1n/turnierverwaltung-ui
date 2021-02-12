@@ -1,12 +1,21 @@
-import React, {useState,  useEffect} from "react";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+/**
+ * @file Personenverwaltung.js
+ * @desc Personenverwaltung-Panel
+ * @author AH
+ */
+
+// First-Party
+import "./Personenverwaltung.css";
 import {useFormFields} from "../libs/hooksLib";
 import LoaderButton from "../Components/LoaderButton";
 import {onError} from "../libs/errorLib";
 import { useAppContext } from "../libs/contextLib";
-import "./Personenverwaltung.css";
+
+// Third-Party
+import React, {useState,  useEffect} from "react";
+import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 export default function Personenverwaltung() {
 	/**

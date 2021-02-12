@@ -1,3 +1,9 @@
+/**
+ * @file Auth.js
+ * @desc Class for handeling authentication things
+ * @author CJ & AH
+ */
+
 export default class Auth {
 
 	static AuthErrorTypes = {

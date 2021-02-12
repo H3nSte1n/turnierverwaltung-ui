@@ -1,12 +1,21 @@
-import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import Auth from "../Components/Auth";
-import { useHistory } from "react-router-dom";
+/**
+ * @file Signup.js
+ * @desc Signup-Panel
+ * @author AH
+ */
+
+// First-Party
+import "./Signup.css";
 import LoaderButton from "../Components/LoaderButton";
 import { useAppContext } from "../libs/contextLib";
 import { useFormFields } from "../libs/hooksLib";
 import { onError } from "../libs/errorLib";
-import "./Signup.css";
+
+// Third-Party
+import React, { useState } from "react";
+import Form from "react-bootstrap/Form";
+import Auth from "../Components/Auth";
+import { useHistory } from "react-router-dom";
 
 export default function Signup() {
 	const [fields, handleFieldChange] = useFormFields({

@@ -1,12 +1,21 @@
-import React, {useState,  useEffect} from "react";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+/**
+ * @file Mannschaftsverwaltung.js
+ * @desc Mannschaftsverwaltung-Panel
+ * @author AH
+ */
+
+// First-Party
+import "./Mannschaftsverwaltung.css";
 import {useFormFields} from "../libs/hooksLib";
 import LoaderButton from "../Components/LoaderButton";
 import {onError} from "../libs/errorLib";
 import { useAppContext } from "../libs/contextLib";
-import "./Mannschaftsverwaltung.css";
+
+// Third-Party
+import React, {useState,  useEffect} from "react";
+import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 export default function Mannschaftsverwaltung() {
 	/**
@@ -26,8 +35,7 @@ export default function Mannschaftsverwaltung() {
 		editingID: 0,
 		editingName: "",
 		editingPersons: [],
-		nonSelectedEditingPersons: [],
-		selectedEditingPersons: []
+		editingPersonsIds: [],
 	});
 
 	useEffect(() => {
@@ -187,9 +195,24 @@ export default function Mannschaftsverwaltung() {
 
 			fields.editingID = id;
 			fields.editingName = team.name;
-			fields.selectedEditingPersons = team.personList;
-			fields.editingPersons = team.personList;
-			fields.nonSelectedEditingPersons = personsMap;
+
+			let checkedPersons;
+			let uncheckedPersons;
+
+			checkedPersons = team.personList.map(function(person) { // team.personList = selected ppl
+				person.selected = true;
+				return person;
+			});
+
+			uncheckedPersons = personsMap.map(function(person) { // personsMap = not selected ppl
+				person.selected = false;
+				return person;
+			});
+
+			fields.editingPersons = {...fields.editingPersons, ...checkedPersons};
+			fields.editingPersons = {...fields.editingPersons, ...uncheckedPersons};
+
+			fields.editingPersons = Object.values(fields.editingPersons);
 
 			setIEditing(true);
 
@@ -204,8 +227,6 @@ export default function Mannschaftsverwaltung() {
 		fields.editingID = "";
 		fields.editingName = "";
 		fields.editingPersons = [];
-		fields.selectedEditingPersons = [];
-		fields.nonSelectedEditingPersons = [];
 		setIEditing(false);
 	}
 
@@ -372,9 +393,7 @@ export default function Mannschaftsverwaltung() {
 		}
 
 		try {
-			let selectedPersons = fields.selectedEditingPersons;
 
-			console.log(selectedPersons);
 			console.log(e);
 			//await editTeam();
 		} catch (e) {
@@ -384,8 +403,6 @@ export default function Mannschaftsverwaltung() {
 		fields.editingID = "";
 		fields.editingName = "";
 		fields.editingPersons = [];
-		fields.selectedEditingPersons = [];
-		fields.nonSelectedEditingPersons = [];
 
 		setIsLoading(false);
 		setIEditing(false);
@@ -420,11 +437,8 @@ export default function Mannschaftsverwaltung() {
 							</td>
 							<td>
 								<Form.Group controlId="editingPersons">
-									<Form.Control as="select" onChange={handleFieldChange} value={fields.selectedEditingPersons} multiple>
-										{fields.selectedEditingPersons.map(( person ) => (
-											<option key={person.key} value={person.key}>{person.firstname}, {person.lastname}</option>
-										))}
-										{fields.nonSelectedEditingPersons.map(( person ) => (
+									<Form.Control as="select" multiple={true} onChange={handleFieldChange} value={fields.editingPersons}>
+										{fields.editingPersons.map(( person ) => (
 											<option key={person.key} value={person.key}>{person.firstname}, {person.lastname}</option>
 										))}
 									</Form.Control>

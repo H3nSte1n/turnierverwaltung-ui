@@ -1,12 +1,22 @@
-import React, {useState,  useEffect} from "react";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+/**
+ * @file Turnierverwaltung.js
+ * @desc Turnierverwaltung-Panel
+ * @author AH
+ */
+
+// First-Party
+import "./Turnierverwaltung.css";
 import {useFormFields} from "../libs/hooksLib";
 import LoaderButton from "../Components/LoaderButton";
 import {onError} from "../libs/errorLib";
 import { useAppContext } from "../libs/contextLib";
 import "./Turnierverwaltung.css";
+
+// Third-Party
+import React, {useState,  useEffect} from "react";
+import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 export default function Turnierverwaltung() {
 	/**
