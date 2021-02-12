@@ -14,6 +14,7 @@ export default function Signup() {
 		password: "",
 		email: "",
 		confirmPassword: "",
+		role: [],
 	});
 	const history = useHistory();
 	const [newUser, setNewUser] = useState(null);
@@ -25,6 +26,7 @@ export default function Signup() {
 			fields.user.length > 0 &&
 			fields.password.length > 0 &&
 			fields.email.length > 0 &&
+			fields.role.length > 0 &&
 			fields.password === fields.confirmPassword
 		);
 	}
@@ -39,6 +41,7 @@ export default function Signup() {
 				username: fields.user,
 				password: fields.password,
 				email: fields.email,
+				role: fields.role,
 			});
 			setNewUser(newUser);
 
@@ -63,6 +66,13 @@ export default function Signup() {
 				<Form.Group controlId="email" size="lg">
 					<Form.Label>E-Mail-Address</Form.Label>
 					<Form.Control type="email" value={fields.email} onChange={handleFieldChange}/>
+				</Form.Group>
+				<Form.Group controlId="role" size="lg">
+					<Form.Label>Benutzergruppe</Form.Label>
+					<Form.Control as="select" value={fields.role} onChange={handleFieldChange}>
+						<option value="admin">Admin</option>
+						<option value="user">Benutzer</option>
+					</Form.Control>
 				</Form.Group>
 				<Form.Group controlId="password" size="lg">
 					<Form.Label>Password</Form.Label>

@@ -87,11 +87,13 @@ export default class Auth {
 		let username = null;
 		let password = null;
 		let email = null;
+		let role = "user";
 
 		if (data && typeof data === 'object') {
 			username = data['username'];
 			password = data['password'];
 			email = data['email'];
+			role = data['role'];
 		} else {
 			return this.rejectAuthError(this.AuthErrorTypes.SignUpError);
 		}
@@ -113,7 +115,7 @@ export default class Auth {
 					"name": username,
 					"password": password,
 					"email": email,
-					"role": "user", // admin|user
+					"role": role,
 				}),
 			}).then(data => {
 				resolve(data);
