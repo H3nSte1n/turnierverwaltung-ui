@@ -1,16 +1,421 @@
-import React from "react";
+import React, {useState,  useEffect} from "react";
+import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import {useFormFields} from "../libs/hooksLib";
+import LoaderButton from "../Components/LoaderButton";
+import {onError} from "../libs/errorLib";
+import { useAppContext } from "../libs/contextLib";
+import "./Turnierverwaltung.css";
 
-class Turnierverwaltung extends React.Component {
-	render() {
+export default function Turnierverwaltung() {
+	/**
+	 * @doc https://tournament-management-service.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml
+	 * @type {string}
+	 */
+	const apiURL = "https://tournament-management-service.herokuapp.com/api/v1/";
+	const teamsApiURL = "https://teams-management-system.herokuapp.com/api/v1/";
+	const [tournaments, setTournaments] = useState([]);
+	const { isAuthenticated } = useAppContext();
+	const [isLoading, setIsLoading] = useState(false);
+	const [isEditing, setIEditing] = useState(false);
+	const [isAdding, setAdding] = useState(false);
+	const [fields, handleFieldChange] = useFormFields({
+		name: "",
+		teamList: [],
+
+		editingID: 0,
+		editingName: "",
+		editingTeamList: [], // FIXME
+	});
+
+	useEffect(() => {
+		async function onLoad() {
+			if (!isAuthenticated) {
+				return;
+			}
+
+			try {
+				const tournaments = await loadTournaments();
+				const teams = await loadTeams();
+
+				const teamsMap = {};
+				teams.forEach(function(team) {teamsMap[team.id] = team;});
+
+				console.log(tournaments);
+
+				tournaments.map(function (tournament) {
+					if(tournament.teamList.length === 0) {
+						return tournament;
+					}
+					else {
+						tournament.teamList = tournament.teamList.map(function (team) {
+							if(typeof teamsMap[team] === 'undefined') {
+								team = {id: team, name: "[FEHLER] Undefiniertes Team"};
+							}
+							else {
+								team = teamsMap[team];
+							}
+							return team;
+						});
+					}
+
+					return tournament;
+				});
+
+				setTournaments(tournaments);
+			} catch (e) {
+				onError(e);
+			}
+
+			setIsLoading(false);
+		}
+
+		onLoad();
+	}, [isAuthenticated, isEditing, isAdding]);
+
+	function validateForm() {
+		return fields.name.length > 0;
+	}
+
+	function validateEditForm() {
+		return fields.editingName.length > 0;
+	}
+
+	function goBack() {
+		fields.editingID = "";
+		fields.editingName = "";
+		fields.editingTeamList = "";
+		setIEditing(false);
+	}
+
+	async function loadTeams() {
+		return new Promise((resolve, reject) => {
+			fetch(teamsApiURL + "teams", {
+				method: 'GET',
+				headers: {
+					'Authorization': "Bearer " + localStorage.getItem('session'),
+				},
+			}).then(data => {
+				if(data.status === 200) {
+					data.json().then(function (data) {
+						resolve(data);
+					});
+				}
+				else {
+					reject();
+				}
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	}
+
+	async function loadTournaments() {
+		return new Promise((resolve, reject) => {
+			fetch(apiURL + "tournaments", {
+				method: 'GET',
+				headers: {
+					'Authorization': "Bearer " + localStorage.getItem('session'),
+				},
+			}).then(data => {
+				if(data.status === 200) {
+					data.json().then(function (data) {
+						resolve(data);
+					});
+				}
+				else {
+					reject();
+				}
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	}
+
+	async function loadTournament(id) {
+		return new Promise((resolve, reject) => {
+			fetch(apiURL + "tournaments/" + id, {
+				method: 'GET',
+				headers: {
+					'Authorization': "Bearer " + localStorage.getItem('session'),
+				},
+			}).then(data => {
+				if(data.status === 200) {
+					data.json().then(function (data) {
+						resolve(data);
+					});
+				}
+				else {
+					reject();
+				}
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	}
+
+	async function deleteTournament(id) {
+		return new Promise((resolve, reject) => {
+			fetch(apiURL + "tournaments/" + id, {
+				method: 'DELETE',
+				headers: {
+					'Authorization': "Bearer " + localStorage.getItem('session'),
+				},
+			}).then(data => {
+				if(data.status === 200) {
+					data.json().then(function (data) {
+						resolve(data);
+					});
+				}
+				else {
+					reject();
+				}
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	}
+
+	async function handleDelete(id, e) {
+		e.preventDefault();
+		setIsLoading(true);
+		if (!isAuthenticated) {
+			return;
+		}
+
+		try {
+			await deleteTournament(id);
+			let persIndex = tournaments.map(function(tournament) { return tournament.id; }).indexOf(id);
+			tournaments.splice(persIndex, 1);
+		} catch (e) {
+			onError(e);
+		}
+
+		setIsLoading(false);
+	}
+
+	async function handleEdit(id, e) {
+		e.preventDefault();
+
+		setIsLoading(true);
+		if (!isAuthenticated) {
+			return;
+		}
+
+		try {
+			const tournament = await loadTournament(id);
+
+			fields.editingID = id;
+			fields.editingName = tournament.name;
+			fields.editingTeamList = tournament.teamList; // FIXME
+
+			setIEditing(true);
+
+		} catch (e) {
+			onError(e);
+		}
+
+		setIsLoading(false);
+	}
+
+	function renderTournamentsList(tournaments) {
 		return (
-			<div className="Turnierverwaltung">
-				<div className="lander">
-					<h1>Turnierverwaltung</h1>
-					<p className="text-muted">Noch nicht implementiert!</p>
-				</div>
+			<>
+				{tournaments.map(({ id, name, teamList }) => ( // FIXME
+					<tr key={id}>
+						<td>{id}</td>
+						<td>{name}</td>
+						<td>
+							<Form.Group>
+								<Form.Control as="select">
+									{teamList.map(( team ) => (
+										<option key={team.key}>{team.name}</option>
+									))}
+								</Form.Control>
+							</Form.Group>
+						</td>
+						<td>
+							<Button variant="warning" block onClick={(e) => handleEdit(id, e)} disabled={localStorage.getItem('role') !== 'admin'}>Bearbeiten</Button>
+						</td>
+						<td>
+							<Button variant="danger" block onClick={(e) => handleDelete(id, e)} disabled={localStorage.getItem('role') !== 'admin'}>Löschen</Button>
+						</td>
+					</tr>
+				))}
+			</>
+		);
+	}
+
+	function renderTournaments() {
+		return (
+			<>{!isLoading && renderTournamentsList(tournaments)}</>
+		);
+	}
+
+	async function addTournament() {
+		return new Promise((resolve, reject) => {
+			fetch(apiURL + "tournaments", {
+				method: 'POST',
+				headers: {
+					'Authorization': "Bearer " + localStorage.getItem('session'),
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					"name": fields.name,
+					"teamList": [],
+				}),
+			}).then(data => {
+				if(data.status === 200) {
+					data.json().then(function (data) {
+						resolve(data);
+					});
+				}
+				else {
+					reject();
+				}
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	}
+
+	async function handleAdd(e) {
+		e.preventDefault();
+		setIsLoading(true);
+		if (!isAuthenticated) {
+			return;
+		}
+
+		try {
+			setAdding(true);
+			await addTournament();
+
+			fields.name = "";
+
+			setAdding(false);
+		} catch (e) {
+			onError(e);
+		}
+
+		setIsLoading(false);
+	}
+
+	function renderAddForm() {
+		if(localStorage.getItem('role') !== 'admin') {return null}
+		return(
+			<Form onSubmit={handleAdd}>
+				<Table hover>
+					<thead>
+					<tr>
+						<td/>
+						<td>Name</td>
+						<td colSpan="3"/>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td/>
+						<td>
+							<Form.Group controlId="name">
+								<Form.Control value={fields.name} onChange={handleFieldChange}/>
+							</Form.Group>
+						</td>
+						<td colSpan="3">
+							<LoaderButton block type="submit" variant="success" isLoading={isLoading} disabled={!validateForm()}>
+								Hinzufügen
+							</LoaderButton>
+						</td>
+					</tr>
+					</tbody>
+				</Table>
+			</Form>
+		)
+	}
+
+	async function handleEditForm(e) {
+		e.preventDefault();
+		setIsLoading(true);
+
+		// FIXME
+
+		setIsLoading(false);
+		setIEditing(false);
+	}
+
+	function renderEditingForm() {
+		if(localStorage.getItem('role') !== 'admin') {return null}
+		return (
+			<div className="lander">
+				<h1>Turnierverwaltung</h1>
+				<Form onSubmit={handleEditForm}>
+					<Table hover>
+						<thead>
+						<tr>
+							<td>ID</td>
+							<td>Name</td>
+							<td>Mannschaften</td>
+							<td colSpan="2"/>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td>
+								<Form.Group controlId="editingID">
+									<Form.Control disabled value={fields.editingID} onChange={handleFieldChange}/>
+								</Form.Group>
+							</td>
+							<td>
+								<Form.Group controlId="editingName">
+									<Form.Control value={fields.editingName} onChange={handleFieldChange}/>
+								</Form.Group>
+							</td>
+							<td>
+								Mannschaften
+							</td>
+							<td>
+								<LoaderButton block variant="warning" isLoading={isLoading} onClick={goBack}>
+									Zurück
+								</LoaderButton>
+							</td>
+							<td>
+								<LoaderButton block type="submit" variant="success" isLoading={isLoading} disabled={!validateEditForm()}>
+									Speichern
+								</LoaderButton>
+							</td>
+						</tr>
+						</tbody>
+					</Table>
+				</Form>
 			</div>
 		);
 	}
-}
 
-export default Turnierverwaltung;
+	function renderHomeForm() {
+		return (
+			<div className="lander">
+				<h1>Turnierverwaltung</h1>
+				<Table hover>
+					<thead>
+					<tr>
+						<td>ID</td>
+						<td>Name</td>
+						<td>Teams</td>
+						<td colSpan="2"/>
+					</tr>
+					</thead>
+					<tbody>
+					{renderTournaments()}
+					</tbody>
+				</Table>
+				{renderAddForm()}
+			</div>
+		);
+	}
+
+	return (
+		<div className="Turnierverwaltung">
+			{isAuthenticated ? isEditing ? renderEditingForm() : renderHomeForm() : null}
+		</div>
+	);
+}
