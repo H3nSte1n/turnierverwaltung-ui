@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+/**
+ * @file Login.js
+ * @desc Login-Panel
+ * @author AH
+ */
+
+// First-Party
+import "./Login.css";
 import Auth from "../Components/Auth";
-import Form from "react-bootstrap/Form";
 import LoaderButton from "../Components/LoaderButton";
 import { useAppContext } from "../libs/contextLib";
 import { useFormFields } from "../libs/hooksLib";
 import { onError } from "../libs/errorLib";
-import "./Login.css";
+
+// Third-Party
+import React, { useState } from "react";
+import Form from "react-bootstrap/Form";
 
 export default function Login() {
 	const { userHasAuthenticated } = useAppContext();
