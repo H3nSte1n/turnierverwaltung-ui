@@ -1,6 +1,15 @@
+/**
+ * @file UnauthenticatedRoute.js
+ * @desc Component for handeling Routes of unauthenticated users
+ * @author AH
+ */
+
+// First-Party
+import { useAppContext } from "../libs/contextLib";
+
+// Third-Party
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { useAppContext } from "../libs/contextLib";
 
 function querystring(name, url = window.location.href) {
 	name = name.replace(/[[]]/g, "\\$&");

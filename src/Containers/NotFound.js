@@ -1,4 +1,12 @@
+/**
+ * @file NotFound.js
+ * @desc NotFound-Panel
+ * @author AH
+ */
+
+// Thord-Party
 import React from "react";
+
 export default function NotFound() {
 	return (
 		<div className="NotFound text-center">

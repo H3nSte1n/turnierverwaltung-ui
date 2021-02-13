@@ -1,8 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+/**
+ * @file index.js
+ * @desc Gateway
+ * @author AH
+ */
+
+// First-Party
 import './index.css';
 import App from './App';
+
+// Third-Party
+import React from "react";
 import reportWebVitals from './reportWebVitals';
+import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 ReactDOM.render(
