@@ -1,3 +1,10 @@
+/**
+ * @file contextLib.js
+ * @desc Acc-Context handler (Check Login state)
+ * @author AH
+ */
+
+// Third-Party
 import { useContext, createContext } from "react";
 
 export const AppContext = createContext(null);

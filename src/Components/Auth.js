@@ -1,3 +1,9 @@
+/**
+ * @file Auth.js
+ * @desc Class for handeling authentication things
+ * @author CJ & AH
+ */
+
 export default class Auth {
 
 	static AuthErrorTypes = {
@@ -14,7 +20,7 @@ export default class Auth {
 	 * @doc https://turnierverwaltung-auth.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml
 	 * @type {string}
 	 */
-	static authAPIUrl = "https://cors-anywhere.herokuapp.com/https://turnierverwaltung-auth.herokuapp.com/api/v1/";
+	static authAPIUrl = "https://turnierverwaltung-auth.herokuapp.com/api/v1/";
 
 	/**
 	 *
@@ -60,8 +66,9 @@ export default class Auth {
 				body: JSON.stringify(authDetails),
 			}).then(data => {
 				if(data.status === 200) {
-					data.text().then(function(data) {
-						localStorage.setItem('session', data)
+					data.json().then(function(data) {
+						localStorage.setItem('session', data.token);
+						localStorage.setItem('role', data.role);
 					});
 					localStorage.setItem('username', authDetails.name)
 					resolve(data);
@@ -86,11 +93,13 @@ export default class Auth {
 		let username = null;
 		let password = null;
 		let email = null;
+		let role = "user";
 
 		if (data && typeof data === 'object') {
 			username = data['username'];
 			password = data['password'];
 			email = data['email'];
+			role = data['role'];
 		} else {
 			return this.rejectAuthError(this.AuthErrorTypes.SignUpError);
 		}
@@ -112,7 +121,7 @@ export default class Auth {
 					"name": username,
 					"password": password,
 					"email": email,
-					"role": "user", // admin|user
+					"role": role,
 				}),
 			}).then(data => {
 				resolve(data);
@@ -136,6 +145,7 @@ export default class Auth {
 		try {
 			localStorage.removeItem('username');
 			localStorage.removeItem('session');
+			localStorage.removeItem('role');
 		} catch (e) { }
 	}
 
@@ -145,7 +155,7 @@ export default class Auth {
 	 */
 	static async currentSession() {
 		return new Promise((resolve, reject) => {
-			if (!localStorage.getItem('username') || !localStorage.getItem('session')) {
+			if (!localStorage.getItem('username') || !localStorage.getItem('session') || !localStorage.getItem('role')) {
 				return reject();
 			} else {
 				return resolve();

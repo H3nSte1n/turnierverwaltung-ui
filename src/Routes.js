@@ -1,5 +1,10 @@
-import React from "react";
-import { Route, Switch } from "react-router-dom";
+/**
+ * @file Routes.js
+ * @desc Handeling Routes of the App
+ * @author AH
+ */
+
+// First-Party
 import Home from "./Containers/Home";
 import NotFound from "./Containers/NotFound";
 import Login from "./Containers/Login";
@@ -9,6 +14,10 @@ import Mannschaftsverwaltung from './Containers/Mannschaftsverwaltung';
 import Turnierverwaltung from './Containers/Turnierverwaltung';
 import AuthenticatedRoute from "./Components/AuthenticatedRoute";
 import UnauthenticatedRoute from "./Components/UnauthenticatedRoute";
+
+// Third-Party
+import React from "react";
+import { Route, Switch } from "react-router-dom";
 
 export default function Routes() {
 	return (

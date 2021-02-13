@@ -1,5 +1,14 @@
-import React from "react";
+/**
+ * @file Home.js
+ * @desc Home-Panel
+ * @author AH
+ */
+
+// First-Party
 import "./Home.css";
+
+// Third-Party
+import React from "react";
 
 export default function Home() {
 	return (
