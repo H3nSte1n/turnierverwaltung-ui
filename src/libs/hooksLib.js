@@ -1,3 +1,10 @@
+/**
+ * @file hooksLib.js
+ * @desc Used, to make the usage of States easier
+ * @author AH
+ */
+
+// Third-Party
 import { useState } from "react";
 
 export function useFormFields(initialState) {

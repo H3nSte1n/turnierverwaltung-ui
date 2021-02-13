@@ -1,13 +1,22 @@
+/**
+ * @file App.js
+ * @desc Gateway-Panel
+ * @author AH
+ */
+
+// First-Party
+import './App.css';
+import Routes from "./Routes";
+import { AppContext } from "./libs/contextLib";
+import Auth from "./Components/Auth";
+import { onError } from "./libs/errorLib";
+
+// Third-Party
 import React, { useState, useEffect } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { LinkContainer } from "react-router-bootstrap";
 import { useHistory } from "react-router-dom";
-import Routes from "./Routes";
-import { AppContext } from "./libs/contextLib";
-import Auth from "./Components/Auth";
-//import { onError } from "./libs/errorLib";
-import './App.css';
 
 function App() {
 	const [isAuthenticating, setIsAuthenticating] = useState(true);
@@ -24,7 +33,9 @@ function App() {
 			await Auth.currentSession();
 			userHasAuthenticated(true);
 		}
-		catch(e) { }
+		catch(e) {
+			onError(e);
+		}
 
 		setIsAuthenticating(false);
 	}
