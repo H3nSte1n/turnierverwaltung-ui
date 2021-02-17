@@ -330,7 +330,7 @@ export default function Mannschaftsverwaltung() {
 							<Form.Group>
 								<Form.Control as="select">
 									{personList.map(( person ) => (
-										<option key={person.key}>{person.firstname}, {person.lastname}</option>
+										<option key={person.id}>[{person.id}] - {person.firstname}, {person.lastname}</option>
 									))}
 								</Form.Control>
 							</Form.Group>

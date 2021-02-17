@@ -281,7 +281,7 @@ export default function Turnierverwaltung() {
 							<Form.Group>
 								<Form.Control as="select">
 									{teamList.map(( team ) => (
-										<option key={team.key}>{team.name}</option>
+										<option key={team.id}>[{team.id}] - {team.name}</option>
 									))}
 								</Form.Control>
 							</Form.Group>
@@ -341,7 +341,7 @@ export default function Turnierverwaltung() {
 				},
 				body: JSON.stringify({
 					"name": fields.editingName,
-					"personList" : teamData,
+					"teamList" : teamData,
 				}),
 			}).then(data => {
 				if(data.status === 200) {
