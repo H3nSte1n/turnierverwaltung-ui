@@ -10,6 +10,7 @@ import {useFormFields} from "../libs/hooksLib";
 import LoaderButton from "../Components/LoaderButton";
 import {onError} from "../libs/errorLib";
 import { useAppContext } from "../libs/contextLib";
+import "./Mannschaftsverwaltung.css";
 
 // Third-Party
 import React, {useState,  useEffect} from "react";
@@ -35,7 +36,6 @@ export default function Mannschaftsverwaltung() {
 		editingID: 0,
 		editingName: "",
 		editingPersons: [],
-		editingPersonsIds: [],
 	});
 
 	useEffect(() => {
@@ -86,7 +86,7 @@ export default function Mannschaftsverwaltung() {
 	}
 
 	function validateEditForm() {
-		return fields.editingName.length > 0 && fields.editingPersons.length > 0;
+		return fields.editingName.length > 0;
 	}
 
 	async function loadPersons() {
@@ -199,12 +199,12 @@ export default function Mannschaftsverwaltung() {
 			let checkedPersons;
 			let uncheckedPersons;
 
-			checkedPersons = team.personList.map(function(person) { // team.personList = selected ppl
+			checkedPersons = team.personList.map(function(person) {
 				person.selected = true;
 				return person;
 			});
 
-			uncheckedPersons = personsMap.map(function(person) { // personsMap = not selected ppl
+			uncheckedPersons = personsMap.map(function(person) {
 				person.selected = false;
 				return person;
 			});
@@ -385,6 +385,33 @@ export default function Mannschaftsverwaltung() {
 		)
 	}
 
+	async function editTeam(personData) {
+		return new Promise((resolve, reject) => {
+			fetch(apiURL + "teams/" + fields.editingID, {
+				method: 'PUT',
+				headers: {
+					'Authorization': "Bearer " + localStorage.getItem('session'),
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					"name": fields.editingName,
+					"personList" : personData,
+				}),
+			}).then(data => {
+				if(data.status === 200) {
+					data.json().then(function (data) {
+						resolve(data);
+					});
+				}
+				else {
+					reject();
+				}
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	}
+
 	async function handleEditForm(e) {
 		e.preventDefault();
 		setIsLoading(true);
@@ -393,9 +420,17 @@ export default function Mannschaftsverwaltung() {
 		}
 
 		try {
+			let selectedPersons = e.target.selectedEditingPersons.selectedOptions;
 
-			console.log(e);
-			//await editTeam();
+			let personData = [];
+
+			for(let selectedPerson of selectedPersons) {
+				if(selectedPerson.selected) {
+					personData.push(parseInt(selectedPerson.value));
+				}
+			}
+
+			await editTeam(personData);
 		} catch (e) {
 			onError(e);
 		}
@@ -436,10 +471,10 @@ export default function Mannschaftsverwaltung() {
 								</Form.Group>
 							</td>
 							<td>
-								<Form.Group controlId="editingPersons">
-									<Form.Control as="select" multiple={true} onChange={handleFieldChange} value={fields.editingPersons}>
+								<Form.Group controlId="selectedEditingPersons">
+									<Form.Control as="select" multiple={true}>
 										{fields.editingPersons.map(( person ) => (
-											<option key={person.key} value={person.key}>{person.firstname}, {person.lastname}</option>
+											<option selected={person.selected} key={person.id} value={person.id}>[{person.id}] - {person.firstname}, {person.lastname}</option>
 										))}
 									</Form.Control>
 								</Form.Group>
