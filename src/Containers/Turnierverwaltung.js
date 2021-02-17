@@ -32,11 +32,10 @@ export default function Turnierverwaltung() {
 	const [isAdding, setAdding] = useState(false);
 	const [fields, handleFieldChange] = useFormFields({
 		name: "",
-		teamList: [],
 
 		editingID: 0,
 		editingName: "",
-		editingTeamList: [], // FIXME
+		editingTeams: [],
 	});
 
 	useEffect(() => {
@@ -51,8 +50,6 @@ export default function Turnierverwaltung() {
 
 				const teamsMap = {};
 				teams.forEach(function(team) {teamsMap[team.id] = team;});
-
-				console.log(tournaments);
 
 				tournaments.map(function (tournament) {
 					if(tournament.teamList.length === 0) {
@@ -215,10 +212,54 @@ export default function Turnierverwaltung() {
 
 		try {
 			const tournament = await loadTournament(id);
+			const teams = await loadTeams();
+
+			let teamInTournament = {};
+			let teamsMap = [];
+
+			teams.forEach(function(team) {teamsMap[team.id] = team;});
+
+			if(tournament.teamList.length === 0) {}
+			else {
+				tournament.teamList = tournament.teamList.map(function (team) {
+					if(typeof teamsMap[team] === 'undefined') {
+						teamInTournament = {id: team, name: "[FEHLER] Undefiniertes Team"};
+					}
+					else {
+						teamInTournament = teamsMap[team];
+						teamsMap.splice(team, 1);
+					}
+
+					return teamInTournament;
+				});
+			}
+
+			for (let i = 0; i < tournament.teamList.length; i++) {
+				if(tournament.teamList[i].name === "[FEHLER] Undefiniertes Team") {
+					delete tournament.teamList[i];
+				}
+			}
 
 			fields.editingID = id;
 			fields.editingName = tournament.name;
-			fields.editingTeamList = tournament.teamList; // FIXME
+
+			let checkedTeams;
+			let uncheckedTeams;
+
+			checkedTeams = tournament.teamList.map(function(team) {
+				team.selected = true;
+				return team;
+			});
+
+			uncheckedTeams = teamsMap.map(function(team) {
+				team.selected = false;
+				return team;
+			});
+
+			fields.editingTeams = {...fields.editingTeams, ...checkedTeams};
+			fields.editingTeams = {...fields.editingTeams, ...uncheckedTeams};
+
+			fields.editingTeams = Object.values(fields.editingTeams);
 
 			setIEditing(true);
 
@@ -274,6 +315,33 @@ export default function Turnierverwaltung() {
 				body: JSON.stringify({
 					"name": fields.name,
 					"teamList": [],
+				}),
+			}).then(data => {
+				if(data.status === 200) {
+					data.json().then(function (data) {
+						resolve(data);
+					});
+				}
+				else {
+					reject();
+				}
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	}
+
+	async function editTournament(teamData) {
+		return new Promise((resolve, reject) => {
+			fetch(apiURL + "tournaments/" + fields.editingID, {
+				method: 'PUT',
+				headers: {
+					'Authorization': "Bearer " + localStorage.getItem('session'),
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					"name": fields.editingName,
+					"personList" : teamData,
 				}),
 			}).then(data => {
 				if(data.status === 200) {
@@ -346,8 +414,29 @@ export default function Turnierverwaltung() {
 	async function handleEditForm(e) {
 		e.preventDefault();
 		setIsLoading(true);
+		if (!isAuthenticated) {
+			return;
+		}
 
-		// FIXME
+		try {
+			let selectedTeams = e.target.selectedEditingTeams.selectedOptions;
+
+			let teamData = [];
+
+			for(let selectedTeam of selectedTeams) {
+				if(selectedTeam.selected) {
+					teamData.push(parseInt(selectedTeam.value));
+				}
+			}
+
+			await editTournament(teamData);
+		} catch (e) {
+			onError(e);
+		}
+
+		fields.editingID = "";
+		fields.editingName = "";
+		fields.editingTeams = [];
 
 		setIsLoading(false);
 		setIEditing(false);
@@ -381,7 +470,13 @@ export default function Turnierverwaltung() {
 								</Form.Group>
 							</td>
 							<td>
-								Mannschaften
+								<Form.Group controlId="selectedEditingTeams">
+									<Form.Control as="select" multiple={true}>
+										{fields.editingTeams.map(( team ) => (
+											<option selected={team.selected} key={team.id} value={team.id}>[{team.id}] - {team.name}</option>
+										))}
+									</Form.Control>
+								</Form.Group>
 							</td>
 							<td>
 								<LoaderButton block variant="warning" isLoading={isLoading} onClick={goBack}>
