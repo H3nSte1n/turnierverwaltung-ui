@@ -10,6 +10,7 @@ import "./Admin.css";
 // Third-Party
 import React from "react";
 
+// Code
 export default function Admin() {
 	return (
 		<div className="Admin">

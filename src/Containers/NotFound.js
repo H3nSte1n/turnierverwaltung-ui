@@ -7,6 +7,7 @@
 // Thord-Party
 import React from "react";
 
+// Code
 export default function NotFound() {
 	return (
 		<div className="NotFound text-center">

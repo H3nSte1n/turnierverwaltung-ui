@@ -5,25 +5,23 @@
  */
 
 // First-Party
-import "./Turnierverwaltung.css";
-import {useFormFields} from "../libs/hooksLib";
+import { useFormFields } from "../libs/hooksLib";
 import LoaderButton from "../Components/LoaderButton";
-import {onError} from "../libs/errorLib";
+import { onError } from "../libs/errorLib";
 import { useAppContext } from "../libs/contextLib";
 import "./Turnierverwaltung.css";
 
 // Third-Party
-import React, {useState,  useEffect} from "react";
+import React, { useState,  useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
+// Code
 export default function Turnierverwaltung() {
-	/**
-	 * @doc https://tournament-management-service.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml
-	 * @type {string}
-	 */
+	/** @doc https://tournament-management-service.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml */
 	const apiURL = "https://tournament-management-service.herokuapp.com/api/v1/";
+	/** @doc https://teams-management-system.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml */
 	const teamsApiURL = "https://teams-management-system.herokuapp.com/api/v1/";
 	const [tournaments, setTournaments] = useState([]);
 	const { isAuthenticated } = useAppContext();
@@ -273,7 +271,7 @@ export default function Turnierverwaltung() {
 	function renderTournamentsList(tournaments) {
 		return (
 			<>
-				{tournaments.map(({ id, name, teamList }) => ( // FIXME
+				{tournaments.map(({ id, name, teamList }) => (
 					<tr key={id}>
 						<td>{id}</td>
 						<td>{name}</td>

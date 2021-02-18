@@ -14,6 +14,7 @@ import reportWebVitals from './reportWebVitals';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+// Code
 ReactDOM.render(
 	<React.StrictMode>
 		<Router>

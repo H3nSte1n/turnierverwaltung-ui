@@ -5,17 +5,18 @@
  */
 
 // First-Party
-import "./Login.css";
 import Auth from "../Components/Auth";
 import LoaderButton from "../Components/LoaderButton";
 import { useAppContext } from "../libs/contextLib";
 import { useFormFields } from "../libs/hooksLib";
 import { onError } from "../libs/errorLib";
+import "./Login.css";
 
 // Third-Party
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 
+// Code
 export default function Login() {
 	const { userHasAuthenticated } = useAppContext();
 	const [isLoading, setIsLoading] = useState(false);

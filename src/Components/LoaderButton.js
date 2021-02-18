@@ -12,6 +12,7 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import { BsArrowRepeat } from "react-icons/bs";
 
+// Code
 export default function LoaderButton({
 	isLoading, className = "", disabled = false, ...props
  }) {

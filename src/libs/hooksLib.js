@@ -7,6 +7,7 @@
 // Third-Party
 import { useState } from "react";
 
+// Code
 export function useFormFields(initialState) {
 	const [fields, setValues] = useState(initialState);
 

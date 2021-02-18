@@ -5,25 +5,23 @@
  */
 
 // First-Party
-import "./Mannschaftsverwaltung.css";
-import {useFormFields} from "../libs/hooksLib";
+import { useFormFields } from "../libs/hooksLib";
 import LoaderButton from "../Components/LoaderButton";
-import {onError} from "../libs/errorLib";
+import { onError } from "../libs/errorLib";
 import { useAppContext } from "../libs/contextLib";
 import "./Mannschaftsverwaltung.css";
 
 // Third-Party
-import React, {useState,  useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
+// Code
 export default function Mannschaftsverwaltung() {
-	/**
-	 * @doc https://teams-management-system.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml
-	 * @type {string}
-	 */
+	/** @doc https://teams-management-system.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml */
 	const apiURL = "https://teams-management-system.herokuapp.com/api/v1/";
+	/** @doc https://turnierverwaltung-person-admin.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml */
 	const personsApiURL = "https://turnierverwaltung-person-admin.herokuapp.com/api/v1/";
 	const [teams, setTeams] = useState([]);
 	const { isAuthenticated } = useAppContext();

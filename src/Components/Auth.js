@@ -16,10 +16,7 @@ export default class Auth {
 		Default : 'default',
 	}
 
-	/**
-	 * @doc https://turnierverwaltung-auth.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml
-	 * @type {string}
-	 */
+	/** @doc https://turnierverwaltung-auth.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml */
 	static authAPIUrl = "https://turnierverwaltung-auth.herokuapp.com/api/v1/";
 
 	/**

@@ -11,6 +11,7 @@ import { useAppContext } from "../libs/contextLib";
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
+// Code
 function querystring(name, url = window.location.href) {
 	name = name.replace(/[[]]/g, "\\$&");
 

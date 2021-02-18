@@ -10,6 +10,7 @@ import "./Home.css";
 // Third-Party
 import React from "react";
 
+// Code
 export default function Home() {
 	return (
 		<div className="Home">

@@ -7,6 +7,7 @@
 // Third-Party
 import { useContext, createContext } from "react";
 
+// Code
 export const AppContext = createContext(null);
 
 export function useAppContext() {

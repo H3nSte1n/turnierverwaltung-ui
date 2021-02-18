@@ -5,23 +5,21 @@
  */
 
 // First-Party
-import "./Personenverwaltung.css";
-import {useFormFields} from "../libs/hooksLib";
+import { useFormFields } from "../libs/hooksLib";
 import LoaderButton from "../Components/LoaderButton";
-import {onError} from "../libs/errorLib";
+import { onError } from "../libs/errorLib";
 import { useAppContext } from "../libs/contextLib";
+import "./Personenverwaltung.css";
 
 // Third-Party
-import React, {useState,  useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
+// Code
 export default function Personenverwaltung() {
-	/**
-	 * @doc https://turnierverwaltung-person-admin.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml
-	 * @type {string}
-	 */
+	/** @doc https://turnierverwaltung-person-admin.herokuapp.com/swagger-ui/index.html?url=../static/core_1.0.0.yml */
 	const apiURL = "https://turnierverwaltung-person-admin.herokuapp.com/api/v1/";
 	const [persons, setPersons] = useState([]);
 	const { isAuthenticated } = useAppContext();

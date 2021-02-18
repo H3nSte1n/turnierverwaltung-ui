@@ -5,11 +5,11 @@
  */
 
 // First-Party
-import './App.css';
 import Routes from "./Routes";
 import { AppContext } from "./libs/contextLib";
 import Auth from "./Components/Auth";
 import { onError } from "./libs/errorLib";
+import './App.css';
 
 // Third-Party
 import React, { useState, useEffect } from "react";
@@ -18,6 +18,7 @@ import Nav from "react-bootstrap/Nav";
 import { LinkContainer } from "react-router-bootstrap";
 import { useHistory } from "react-router-dom";
 
+// Code
 function App() {
 	const [isAuthenticating, setIsAuthenticating] = useState(true);
 	const [isAuthenticated, userHasAuthenticated] = useState(false);
