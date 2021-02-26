@@ -94,7 +94,7 @@ export default function Turnierverwaltung() {
 	function goBack() {
 		fields.editingID = "";
 		fields.editingName = "";
-		fields.editingTeamList = "";
+		fields.editingTeams = "";
 		setIEditing(false);
 	}
 
