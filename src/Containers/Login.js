@@ -48,11 +48,11 @@ export default function Login() {
 			<Form onSubmit={handleSubmit}>
 				<Form.Group size="lg" controlId="name">
 					<Form.Label>Name</Form.Label>
-					<Form.Control autoFocus type="name" value={fields.name} onChange={handleFieldChange}/>
+					<Form.Control autoFocus type="name" value={fields.name} onChange={handleFieldChange} autoComplete="username"/>
 				</Form.Group>
 				<Form.Group size="lg" controlId="password">
 					<Form.Label>Password</Form.Label>
-					<Form.Control type="password" value={fields.password} onChange={handleFieldChange}/>
+					<Form.Control type="password" value={fields.password} onChange={handleFieldChange} autoComplete="current-password"/>
 				</Form.Group>
 				<LoaderButton block size="lg" type="submit" isLoading={isLoading} disabled={!validateForm()}>
 					Login

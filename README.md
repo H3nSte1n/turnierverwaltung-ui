@@ -35,7 +35,7 @@ Nicht zu schnell durch die Links klicken, da das Laden von Elementen auf der Sei
 
 **Normaler Benutzer:**
 - Benutzer: usertest1234
-- Passwort: usertest123
+- Passwort: usertest1234
 
 ### Required to run
 

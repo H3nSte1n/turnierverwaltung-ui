@@ -140,6 +140,8 @@ export default class Auth {
 	 */
 	static async signOut() {
 		try {
+			delete this.pendingSignIn;
+
 			localStorage.removeItem('username');
 			localStorage.removeItem('session');
 			localStorage.removeItem('role');
