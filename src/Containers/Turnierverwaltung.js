@@ -7,6 +7,7 @@
 // First-Party
 import { useFormFields } from "../libs/hooksLib";
 import LoaderButton from "../Components/LoaderButton";
+import LoaderField from "../Components/LoaderField";
 import { onError } from "../libs/errorLib";
 import { useAppContext } from "../libs/contextLib";
 import "./Turnierverwaltung.css";
@@ -26,6 +27,7 @@ export default function Turnierverwaltung() {
 	const [tournaments, setTournaments] = useState([]);
 	const { isAuthenticated } = useAppContext();
 	const [isLoading, setIsLoading] = useState(false);
+	const [isLoadingData, setIsLoadingData] = useState(false);
 	const [isEditing, setIEditing] = useState(false);
 	const [isAdding, setAdding] = useState(false);
 	const [fields, handleFieldChange] = useFormFields({
@@ -41,6 +43,8 @@ export default function Turnierverwaltung() {
 			if (!isAuthenticated) {
 				return;
 			}
+
+			setIsLoadingData(true);
 
 			try {
 				const tournaments = await loadTournaments();
@@ -73,7 +77,7 @@ export default function Turnierverwaltung() {
 				onError(e);
 			}
 
-			setIsLoading(false);
+			setIsLoadingData(false);
 		}
 
 		onLoad();
@@ -297,9 +301,29 @@ export default function Turnierverwaltung() {
 	}
 
 	function renderTournaments() {
-		return (
-			<>{!isLoading && renderTournamentsList(tournaments)}</>
-		);
+		if(isLoadingData) {
+			return (
+				<>
+					<tr>
+						<td>
+							<LoaderField size="lg" isLoadingData={isLoadingData} />
+						</td>
+						<td>
+							<LoaderField size="lg" isLoadingData={isLoadingData} />
+						</td>
+						<td>
+							<LoaderField size="lg" isLoadingData={isLoadingData} />
+						</td>
+						<td colSpan="2"/>
+					</tr>
+				</>
+			);
+		}
+		else {
+			return (
+				<>{!isLoading && !isLoadingData && renderTournamentsList(tournaments)}</>
+			);
+		}
 	}
 
 	async function addTournament() {

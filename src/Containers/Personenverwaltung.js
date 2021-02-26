@@ -7,6 +7,7 @@
 // First-Party
 import { useFormFields } from "../libs/hooksLib";
 import LoaderButton from "../Components/LoaderButton";
+import LoaderField from "../Components/LoaderField";
 import { onError } from "../libs/errorLib";
 import { useAppContext } from "../libs/contextLib";
 import "./Personenverwaltung.css";
@@ -24,6 +25,7 @@ export default function Personenverwaltung() {
 	const [persons, setPersons] = useState([]);
 	const { isAuthenticated } = useAppContext();
 	const [isLoading, setIsLoading] = useState(false);
+	const [isLoadingData, setIsLoadingData] = useState(false);
 	const [isEditing, setIEditing] = useState(false);
 	const [isAdding, setAdding] = useState(false);
 	const [fields, handleFieldChange] = useFormFields({
@@ -43,6 +45,8 @@ export default function Personenverwaltung() {
 				return;
 			}
 
+			setIsLoadingData(true);
+
 			try {
 				const persons = await loadPersons();
 
@@ -51,7 +55,7 @@ export default function Personenverwaltung() {
 				onError(e);
 			}
 
-			setIsLoading(false);
+			setIsLoadingData(false);
 		}
 
 		onLoad();
@@ -123,9 +127,32 @@ export default function Personenverwaltung() {
 	}
 
 	function renderPersons() {
-		return (
-			<>{!isLoading && renderPersonsList(persons)}</>
-		);
+		if(isLoadingData) {
+			return (
+				<>
+					<tr>
+						<td>
+							<LoaderField size="lg" isLoadingData={isLoadingData} />
+						</td>
+						<td>
+							<LoaderField size="lg" isLoadingData={isLoadingData} />
+						</td>
+						<td>
+							<LoaderField size="lg" isLoadingData={isLoadingData} />
+						</td>
+						<td>
+							<LoaderField size="lg" isLoadingData={isLoadingData} />
+						</td>
+						<td colSpan="2"/>
+					</tr>
+				</>
+			);
+		}
+		else {
+			return (
+				<>{!isLoading && !isLoadingData && renderPersonsList(persons)}</>
+			);
+		}
 	}
 
 	function validateForm() {
